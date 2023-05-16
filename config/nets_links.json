@@ -1,0 +1,21 @@
+{
+    "networks":{ 
+		"access": ["an1", "an2"],
+		"transport": ["tran"],
+		"dnn": ["e1", "e2", "internet"]
+	},
+	"links" : {
+		"tran": [
+			{
+				"a":{"node": "upf1"},
+				"b":{"node":"upf3"},
+				"w": 1
+			},
+			{
+				"a":{"node": "upf2"},
+				"b":{"node":"upf3","index":1},
+				"w": 1
+			}
+		]
+	}
+}

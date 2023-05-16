@@ -1,0 +1,21 @@
+{
+	"name": "User Plane Manager Function",
+	"plmnlist": [
+		{
+			"mcc": "123",
+			"mnc": "0"
+		},
+		{
+			"mcc": "123",
+			"mnc": "1"
+		}
+	],
+	"sbi": {
+		"ip": "127.0.0.1",
+		"port": 8545
+	},
+	"slices":{
+		"slice1": {"sd": "12345","sst": 0},
+		"slice2": {"sd": "54321","sst": 0}
+	}
+}
