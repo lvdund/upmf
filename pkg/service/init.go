@@ -41,7 +41,7 @@ func New(config *context.UpmfConfig) (nf *context.UPMF, err error) {
 func Start(nf *context.UPMF) {
 	var config context.TopoConfig
 	upftopo.ParseNets(nf.UpfTopo, &config)
-	upftopo.ParseLinks(nf.UpfTopo, &config)
+	// upftopo.ParseLinks(nf.UpfTopo, &config)
 	handleSbi(nf, &config)
 }
 

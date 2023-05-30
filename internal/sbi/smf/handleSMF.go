@@ -7,6 +7,7 @@ import (
 	"upmf/internal/context"
 
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 )
 
 // func SmfHandler(nf *context.UPMF) {
@@ -41,6 +42,7 @@ func GetQuery(nf *context.UPMF) gin.HandlerFunc {
 		}
 
 		quermap.Paths = FindPath(nf.UpfTopo, &query.Query)
+		logrus.Infoln("Response Path:", quermap.Paths.Path)
 		quermap.Query = query.Query
 		quermap.UeId = query.UeId
 

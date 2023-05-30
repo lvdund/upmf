@@ -33,7 +33,7 @@ func UpfRegister(nf *context.UPMF, config *context.TopoConfig) gin.HandlerFunc {
 
 		// RegisterNode <- *ParseNode(&upfNodeConfig, nf)
 		_ = ParseNode(&upfNodeConfig, nf)
-		upftopo.ParseLinks(nf.UpfTopo, config)
+		// upftopo.ParseLinks(nf.UpfTopo, config)
 		// return
 	}
 }
@@ -53,27 +53,29 @@ func ParseNode(upfNodeConfig *context.NodeConfig, nf *context.UPMF) (node *conte
 			if nettype == context.NET_TYPE_DNN {
 				dnninfolist := ParseDnnInfoList(inf)
 				for i, addr := range dnninfolist {
-					infs = append(infs, context.NetInf{
+					addInf := context.NetInf{
 						Id:      fmt.Sprintf("%s:%s:%d", node.Id, netname, i),
 						Netname: netname,
 						Nettype: nettype,
 						Addr:    addr,
 						Local:   node,
-					})
+					}
+					infs = append(infs, addInf)
 					// log.Infof(fmt.Sprintf("%s:%s:%d", node.Id, netname, i))
-					log.Infoln(addr.IpAddr.GetIpAddr())
 				}
 			} else {
 				ipaddrlist := ParseIpAddrList(inf)
 				for i, addr := range ipaddrlist {
-					infs = append(infs, context.NetInf{
+					addInf := context.NetInf{
 						Id:      fmt.Sprintf("%s:%s:%d", node.Id, netname, i),
 						Netname: netname,
 						Nettype: nettype,
 						Addr:    addr,
 						Local:   node,
-					})
-					//log.Infof(fmt.Sprintf("%s:%s:%d", node.id, netname, i))
+					}
+					infs = append(infs, addInf)
+					upftopo.GenLink(node, &addInf, nf.UpfTopo)
+					// log.Infof(fmt.Sprintf("%s:%s:%d", node.Id, netname, i))
 				}
 			}
 			node.Infs[netname] = infs

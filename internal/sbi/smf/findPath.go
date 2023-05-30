@@ -14,6 +14,8 @@ func FindPath(topo *context.UpfTopo, query *context.PathQuery) (datapath context
 	//find all anchors and source nodes for searching(at the same time)
 	dnnfaces := []context.NetInf{} //Net interfaces to Dnn
 	srcfaces := []context.NetInf{} //nodes for start searching
+	var prtstr string
+
 	for _, node := range topo.Nodes {
 
 		// for nameInfs, _ := range node.Infs {
@@ -129,6 +131,9 @@ func FindPath(topo *context.UpfTopo, query *context.PathQuery) (datapath context
 				Path: pathnodes,
 				Ip:   ip,
 				// Deallocator: dnnface.Addr.(*context.DnnInfo).Allocator.Release,
+			}
+			for _, nodepath := range pathnodes {
+				prtstr += nodepath.Id + " "
 			}
 			break
 		}
