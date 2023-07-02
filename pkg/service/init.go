@@ -7,6 +7,7 @@ import (
 	"upmf/internal/sbi/smf"
 	"upmf/internal/sbi/upf"
 	"upmf/internal/upftopo"
+	"upmf/models"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -23,7 +24,7 @@ func New(config *context.UpmfConfig) (nf *context.UPMF, err error) {
 	nf = &context.UPMF{
 		Config: config,
 		// Nodes:   make(map[string]*upman.UpNode),
-		ListMap: make(map[string][]context.QueryMap),
+		ListQueryMap: make(map[string][]context.QueryMap),
 		UpfTopo: &context.UpfTopo{
 			Nets:       make(map[string]uint8),
 			Nodes:      make(map[string]*context.TopoNode),
@@ -31,17 +32,14 @@ func New(config *context.UpmfConfig) (nf *context.UPMF, err error) {
 			Links:      []context.Link{},
 			Heartbeat:  0,
 		},
+		ListLinks: make(map[models.Snssai][]context.Link),
 	}
-	// topo := context.UpfTopo {
-
-	// }
 	return
 }
 
 func Start(nf *context.UPMF) {
 	var config context.TopoConfig
 	upftopo.ParseNets(nf.UpfTopo, &config)
-	// upftopo.ParseLinks(nf.UpfTopo, &config)
 	handleSbi(nf, &config)
 }
 

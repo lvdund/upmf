@@ -8,7 +8,7 @@ import (
 	"upmf/internal/util/dijkstra"
 )
 
-func FindPath(topo *context.UpfTopo, query *context.PathQuery) (datapath context.DataPath) {
+func FindPath(topo *context.UpfTopo, listlink []context.Link, query *context.PathQuery) (datapath context.DataPath) {
 	// log := logrus.WithFields(logrus.Fields{"mod": "path"})
 	// log.Infoln(query)
 	//find all anchors and source nodes for searching(at the same time)
@@ -74,7 +74,7 @@ func FindPath(topo *context.UpfTopo, query *context.PathQuery) (datapath context
 
 	ipmap := make(map[string]edgesig) //map edge name to a tuple of its endpoint's ip addresses
 
-	for _, l := range topo.Links {
+	for _, l := range listlink {
 		if l.IsActive(query.Snssai) { //only pick active links
 			edges = append(edges, dijkstra.EdgeInfo{
 				A: l.Inf1.Local.Id,

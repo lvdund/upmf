@@ -74,7 +74,7 @@ func ParseNode(upfNodeConfig *context.NodeConfig, nf *context.UPMF) (node *conte
 						Local:   node,
 					}
 					infs = append(infs, addInf)
-					upftopo.GenLink(node, &addInf, nf.UpfTopo)
+					upftopo.GenLink(node, &addInf, nf.UpfTopo, nf.ListLinks)
 					// log.Infof(fmt.Sprintf("%s:%s:%d", node.Id, netname, i))
 				}
 			}
