@@ -27,7 +27,7 @@ INFO[0169] Receive a UeAuthenticationsAuthCtxId5gAkaConfirmationPut from AMF for
 INFO[0169] Ue[SUPI=suci-0-208-93-0000-0-0-0000000003] is authenticated  mod="ausf:producer"
 ```
 
-- damf: 1 warn in bottom line
+- damf:
 ```bash
 INFO[0146] Receive initial Ue message                    mod=sbi.producer
 INFO[0146] Callback is : /ran/208-93/daejeon_4_0         mod=sbi.producer
@@ -47,7 +47,7 @@ INFO[0147] UeContext 0 is terminated                     mod=sbi.producer
 WARN[0149] UeContext reaches its end-of-life             mod=sbi.producer
 ```
 
-- amf: 2 erro in 2 bottom lines
+- amf:
 ```bash
 INFO[0129] Receive an InitUeContextRequest from /ran/208-93/daejeon_4_0  mod="amf:sbi.producer"
 WARN[0129] No UeContext is found for SUCI[suci-0-208-93-0000-0-0-0000000003], create a new UeContext  mod="amf:gmm"
@@ -77,7 +77,7 @@ INFO[0195] Receive a UplinkNasTransport for Ue[CoreNgapId=0]  mod="amf:sbi.produ
 INFO[0212] Receive a UplinkNasTransport for Ue[CoreNgapId=0]  mod="amf:sbi.producer"
 ```
 
-- pran: 1 warn(line 2) + 4 erro(6 bottom lines)2 erro in 2 bottom lines
+- pran:
 ```bash
 INFO[0091] SCTP Accept from: 127.0.0.1:37801             tag="pran:ngap"
 INFO[0091] Create a new NG connection for: 127.0.0.1:37801  tag="pran:ngap"
