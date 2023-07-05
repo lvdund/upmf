@@ -3,3 +3,8 @@ using virtualbox
     host-only adapter: 192.168.56.103
 - upf:
     host-only adapter: 192.168.56.104
+
+config:
+	topo.json: pfcp of upf1
+	upfcfg.yaml: change to 0.0.0.0
+	
