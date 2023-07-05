@@ -41,8 +41,8 @@ func RegistrationUPMF(cfg *config.UpfConfig, sbiupmf *models.Sbi) (err error) {
 
 func HeartbeatRequest(sbiupmf *models.Sbi) (err error) {
 	// create request to upmf
-	addrupmf := sbiupmf.Ip.String() + ":" + fmt.Sprint(sbiupmf.Port)
-	req, err := http.NewRequest("POST", addrupmf, nil)
+	addr2upmf := sbiupmf.Ip.String() + ":" + fmt.Sprint(sbiupmf.Port)
+	req, err := http.NewRequest("POST", addr2upmf, nil)
 	if err != nil {
 		logrus.Errorln("Fail sending heartbeat request to UPMF")
 		return

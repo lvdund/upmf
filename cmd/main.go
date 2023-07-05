@@ -5,6 +5,7 @@ import (
 	"os/signal"
 	"syscall"
 	"upf/config"
+	"upf/service"
 
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
@@ -21,8 +22,10 @@ var flags = []cli.Flag{
 	},
 }
 
+var nf *service.UPF
+
 func main() {
-	logrus.Infoln("upf")
+	logrus.Infoln("User Plane Function")
 
 	app := cli.NewApp()
 	app.Name = "smf"
@@ -59,7 +62,16 @@ func action(ctx *cli.Context) (err error) {
 		logrus.Errorf("Fail to parse UPF configuration:", err)
 		return
 	}
+	nf, err = service.New(&cfg)
+	if err != nil {
+		logrus.Errorf("Fail to setup UPF:", err)
+		return
+	}
+	nf.Print()
+	if err = nf.Start(); err != nil {
+		logrus.Errorf("Error running UPF:", err)
+		return
+	}
 
-
-	return nil
+	return
 }
