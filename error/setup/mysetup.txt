@@ -1,0 +1,5 @@
+using virtualbox
+- etrib5gc:
+    host-only adapter: 192.168.56.103
+- upf:
+    host-only adapter: 192.168.56.104
