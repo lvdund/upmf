@@ -10,7 +10,8 @@
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on :8081
-[GIN] 2023/05/30 - 14:22:00 | 200 |      157.32µs |             ::1 | PUT      "/upf/register"
-[GIN] 2023/05/30 - 14:22:02 | 200 |      99.414µs |             ::1 | PUT      "/upf/register"
-[GIN] 2023/05/30 - 14:22:04 | 200 |      95.494µs |             ::1 | PUT      "/upf/register"
-[GIN] 2023/05/30 - 14:22:07 | 200 |     170.215µs |             ::1 | GET      "/smf/query"
+[GIN] 2023/06/30 - 13:50:37 | 200 |      154.08µs |             ::1 | PUT      "/upf/register"
+[GIN] 2023/06/30 - 13:50:37 | 200 |     152.146µs |             ::1 | PUT      "/upf/register"
+[GIN] 2023/06/30 - 13:50:37 | 200 |     149.032µs |             ::1 | PUT      "/upf/register"
+[GIN] 2023/06/30 - 13:50:37 | 200 |     126.205µs |             ::1 | PUT      "/upf/register"
+[GIN] 2023/06/30 - 13:50:41 | 200 |     170.224µs |             ::1 | GET      "/smf/query"

@@ -5,4 +5,4 @@
     ```
     go run cmd/main.go
     ```
-3. For sbi test, join this link [**postman**](https://app.getpostman.com/join-team?invite_code=a7a2abe11c23e910447f8ccc8debf553&target_code=a88a541e0d343869e463eae6b20e7023)
+3. For sbi test, join this link [**postman**](https://app.getpostman.com/join-team?invite_code=0e108cef4305edc1654d849cb7ae4196&target_code=2ab452511741d2b0e2d60797b64c4e61)

@@ -6,10 +6,11 @@ import (
 
 // For create upmf
 type UPMF struct {
-	UpfTopo *UpfTopo `json:"upftopo"`
+	UpfTopo      *UpfTopo                   `json:"upftopo"`
+	ListLinks    map[models.Snssai][]Link `json:"listlink"`
+	Config       *UpmfConfig                `json:"config"`
+	ListQueryMap map[string][]QueryMap      `json:"map"`
 	// Nodes   map[string]*upman.UpNode `json:"nodes"`
-	Config  *UpmfConfig           `json:"config"`
-	ListMap map[string][]QueryMap `json:"map"`
 	// Pfcp    *pfcp.Pfcp               `json:"pfcp`
 }
 

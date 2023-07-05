@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"net"
 	"upmf/internal/context"
+	"upmf/models"
 
 	"github.com/sirupsen/logrus"
 )
@@ -27,7 +28,7 @@ func ParseNets(topo *context.UpfTopo, config *context.TopoConfig) {
 		return
 	}
 
-	for _, name := range config.Networks.Access { // name: ["an1", "an2"]
+	for _, name := range config.Networks.Access { // name: ["an1", "an2", "an3"]
 		topo.Nets[name] = context.NET_TYPE_AN
 	}
 
@@ -38,6 +39,60 @@ func ParseNets(topo *context.UpfTopo, config *context.TopoConfig) {
 	for _, name := range config.Networks.Dnn { // ["e1", "e2", "internet"]
 		topo.Nets[name] = context.NET_TYPE_DNN
 	}
+}
+
+func GenLink(nodeA *context.TopoNode, netInf *context.NetInf, topo *context.UpfTopo, listtopo map[models.Snssai][]context.Link) {
+	if netInf.Nettype != context.NET_TYPE_TRAN {
+		return
+	}
+	for _, nodeB := range topo.Nodes {
+		if nodeA.Id == nodeB.Id {
+			continue
+		}
+
+		for _, infs := range nodeB.Infs {
+			for _, inf := range infs {
+				if inf.Nettype != context.NET_TYPE_TRAN {
+					continue
+				} else if !checkSameGateWay(netInf.Addr.GetIpAddr(), inf.Addr.GetIpAddr()) {
+					continue
+				}
+				inf.Remotes = append(inf.Remotes, nodeA)
+				netInf.Remotes = append(netInf.Remotes, nodeB)
+				topo.Links = append(topo.Links, context.Link{
+					Inf1: netInf,
+					Inf2: &inf,
+					W:    1,
+				})
+				slice := checkSameSlice(nodeA.Slices, nodeB.Slices)
+				if slice != nil {
+					listtopo[*slice] = append(listtopo[*slice], context.Link{
+						Inf1: netInf,
+						Inf2: &inf,
+						W:    1,
+					})
+					log.Infoln(netInf.Id, "-----", inf.Id, "in slice:", *slice)
+				}
+			}
+		}
+	}
+}
+
+func checkSameGateWay(ip1 net.IP, ip2 net.IP) bool {
+	mask1 := ip1.DefaultMask()
+	mask2 := ip2.DefaultMask()
+	return mask1.String() == mask2.String()
+}
+
+func checkSameSlice(slice1 []models.Snssai, slice2 []models.Snssai) *models.Snssai {
+	for _, snssai1 := range slice1 {
+		for _, snssai2 := range slice2 {
+			if snssai1 == snssai2 {
+				return &snssai1
+			}
+		}
+	}
+	return nil
 }
 
 // func ParseLinks(topo *context.UpfTopo, config *context.TopoConfig) {
@@ -127,37 +182,3 @@ func ParseNets(topo *context.UpfTopo, config *context.TopoConfig) {
 // 		}
 // 	}
 // }
-
-func GenLink(nodeA *context.TopoNode, netInf *context.NetInf, topo *context.UpfTopo) {
-	if netInf.Nettype != context.NET_TYPE_TRAN {
-		return
-	}
-	for _, nodeB := range topo.Nodes {
-		if nodeA.Id == nodeB.Id {
-			continue
-		}
-		for _, infs := range nodeB.Infs {
-			for _, inf := range infs {
-				if inf.Nettype != context.NET_TYPE_TRAN {
-					continue
-				} else if !checkSameGateWay(netInf.Addr.GetIpAddr(), inf.Addr.GetIpAddr()) {
-					continue
-				}
-				inf.Remotes = append(inf.Remotes, nodeA)
-				netInf.Remotes = append(netInf.Remotes, nodeB)
-				topo.Links = append(topo.Links, context.Link{
-					Inf1: netInf,
-					Inf2: &inf,
-					W:    1,
-				})
-				log.Infoln(netInf.Id, "-----", inf.Id)
-			}
-		}
-	}
-}
-
-func checkSameGateWay(ip1 net.IP, ip2 net.IP) bool {
-	mask1 := ip1.DefaultMask()
-	mask2 := ip2.DefaultMask()
-	return mask1.String() == mask2.String()
-}
