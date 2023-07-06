@@ -5,6 +5,7 @@ import (
 	"os/signal"
 	"syscall"
 	"upf/config"
+	"upf/models"
 	"upf/service"
 
 	"github.com/sirupsen/logrus"
@@ -45,8 +46,7 @@ func main() {
 			// if nf != nil {
 			// 	nf.Terminate()
 			// }
-			os.Exit(1)
-			logrus.Info("Received a kill signal")
+			nf.Terminate()
 			quit <- struct{}{}
 		}()
 		<-quit
@@ -56,7 +56,7 @@ func main() {
 
 func action(ctx *cli.Context) (err error) {
 
-	var cfg config.UpfConfig
+	var cfg models.UpfConfig
 	filename := ctx.String("config")
 	if cfg, err = config.LoadConfig(filename); err != nil {
 		logrus.Errorf("Fail to parse UPF configuration:", err)

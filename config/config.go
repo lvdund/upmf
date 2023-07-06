@@ -6,14 +6,8 @@ import (
 	"upf/models"
 )
 
-type UpfConfig struct {
-	Id     string     `json:"id"`
-	Slices []string   `json:"slices"`
-	Infs   []string   `json:"infs"`
-	Sbi    models.Sbi `json:"sbi"`
-}
-
-func LoadConfig(filename string) (cfg UpfConfig, err error) {
+func LoadConfig(filename string) (cfg models.UpfConfig, err error) {
+	// load file config
 	var buf []byte
 	if buf, err = ioutil.ReadFile(filename); err != nil {
 		return
