@@ -4,18 +4,21 @@
         "slice1"
     ],
     "infs": {
-        "an1": [
+        "access": [
             {
+                "netname": "an1",
                 "addr": "129.254.195.22"
             }
         ],
-        "tran": [
+        "transport": [
             {
+                "netname": "tran",
                 "addr": "192.168.0.100"
             }
         ],
-        "internet": [
+        "dnn": [
             {
+                "netname": "internet",
                 "addr": "192.168.10.200",
                 "dnninfo": {
                     "cidr": "10.10.10.1/24"
