@@ -5,13 +5,12 @@ import (
 	"net"
 	"strings"
 	"sync/atomic"
-	"upmf/internal/util/fsm"
 	"upmf/models"
 )
 
 type TopoNode struct {
 	//for statemachine
-	fsm.State
+	// fsm.State
 	// worker    common.Executer
 	// hbtimer   common.UeTimer //heartbeat timer
 	// assotimer common.UeTimer //association timer
@@ -62,7 +61,7 @@ func (node *TopoNode) Serve(snssai models.Snssai) bool {
 
 func NewNode(id string, heartbeat int, sbiinfo *SbiConfig, static bool) (node *TopoNode) {
 	node = &TopoNode{
-		State:     fsm.NewState(fsm.UPF_NONASSOCIATED),
+		// State:     fsm.NewState(fsm.UPF_NONASSOCIATED),
 		Id:        id,
 		Heartbeat: heartbeat,
 		Static:    static,

@@ -6,38 +6,25 @@ import (
 	"net"
 	"upmf/internal/context"
 	"upmf/internal/util/dijkstra"
+
+	"github.com/sirupsen/logrus"
 )
 
 func FindPath(topo *context.UpfTopo, listlink []context.Link, query *context.PathQuery) (datapath context.DataPath) {
-	// log := logrus.WithFields(logrus.Fields{"mod": "path"})
-	// log.Infoln(query)
+
 	//find all anchors and source nodes for searching(at the same time)
 	dnnfaces := []context.NetInf{} //Net interfaces to Dnn
 	srcfaces := []context.NetInf{} //nodes for start searching
-	var prtstr string
 
 	for _, node := range topo.Nodes {
-
-		// for nameInfs, _ := range node.Infs {
-		// 	log.Infoln(node.Id,":", nameInfs)
-		// }
-
 		if node.IsActive() && node.Serve(query.Snssai) {
 			if infs := topo.GetNodeDnnFaces(node, query.Dnn); len(infs) > 0 {
-				// for _, inf := range infs {
-				// 	log.Infoln(inf.Id)
-				// }
 				dnnfaces = append(dnnfaces, infs...)
 			}
 
 			if infs := topo.GetNodeAnFaces(node, query.Nets); len(infs) > 0 { //a starting node
-				// for _, inf := range infs {
-				// 	log.Infoln(inf.Id)
-				// }
 				srcfaces = append(srcfaces, infs...)
 			}
-		} else {
-			// log.Infoln("Nodes have not activated:", node.Isactive, node.Serve(query.Snssai))
 		}
 	}
 
@@ -58,10 +45,10 @@ func FindPath(topo *context.UpfTopo, listlink []context.Link, query *context.Pat
 		}
 	}
 	if dnnface == nil {
-		// log.Errorf("can't select an anchor to allocate Ue's IP")
+		logrus.Errorf("can't select an anchor to allocate Ue's IP")
 		return
 	}
-	// log.Infof("UE's IP = %s(%d) on Dnn=%s", ip.String(), len(ip), dnnface.Netname)
+	logrus.Infof("UE's IP = %s(%d) on Dnn=%s", ip.String(), len(ip), dnnface.Netname)
 
 	//build a graph of active links then find the shortest paths from source to destination
 	edges := []dijkstra.EdgeInfo{} //edges to build the grap
@@ -81,7 +68,7 @@ func FindPath(topo *context.UpfTopo, listlink []context.Link, query *context.Pat
 				B: l.Inf2.Local.Id,
 				W: int64(l.W),
 			})
-			// log.Infof("add link %s-%s", l.Inf1.local.id, l.Inf2.local.id)
+			logrus.Infof("add link %s-%s", l.Inf1.Local.Id, l.Inf2.Local.Id)
 			//keep the ip addresses of the edges for later use
 			ipmap[fmt.Sprintf("%s-%s", l.Inf1.Local.Id, l.Inf2.Local.Id)] = edgesig{
 				ip1: l.Inf1.Addr.GetIpAddr(),
@@ -101,10 +88,14 @@ func FindPath(topo *context.UpfTopo, listlink []context.Link, query *context.Pat
 		srcfaces[i], srcfaces[j] = srcfaces[j], srcfaces[i]
 	}
 	for _, srcface := range srcfaces {
-		// log.Infof("Search path from %s to %s", srcface.local.id, dnnface.local.id)
+		logrus.Infof("Search path from %s to %s", srcface.Local.Id, dnnface.Local.Id)
 		if _, paths := graph.ShortestPath(srcface.Local.Id, dnnface.Local.Id); len(paths) > 0 {
-			// log.Infoln("Shortest path:", paths)
 			path := paths[0] //pick the first path
+			for _, pth  := range paths {
+				if len(pth) < len(path) {
+					path = pth
+				}
+			}
 
 			//build the path with ip address of the faces
 			plen := len(path)
@@ -116,7 +107,6 @@ func FindPath(topo *context.UpfTopo, listlink []context.Link, query *context.Pat
 					SbiIp:   sbiinfo.Ip,
 					SbiPort: sbiinfo.Port,
 				}
-				// log.Infoln("node: ", id)
 			}
 			//set ip addresses for the An face and Dnn face of the path
 			pathnodes[0].DlIp = srcface.Addr.GetIpAddr()
@@ -130,10 +120,7 @@ func FindPath(topo *context.UpfTopo, listlink []context.Link, query *context.Pat
 			datapath = context.DataPath{
 				Path: pathnodes,
 				Ip:   ip,
-				// Deallocator: dnnface.Addr.(*context.DnnInfo).Allocator.Release,
-			}
-			for _, nodepath := range pathnodes {
-				prtstr += nodepath.Id + " "
+				Deallocator: dnnface.Addr.(*context.DnnInfo).Allocator.Release,
 			}
 			break
 		}
