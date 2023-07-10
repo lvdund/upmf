@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"os/signal"
+	"smf/service"
 	"syscall"
 
 	"github.com/sirupsen/logrus"
@@ -40,6 +41,7 @@ func main() {
 			// if nf != nil {
 			// 	service.Stop(nf)
 			// }
+			service.Terminate()
 			logrus.Info("Received a kill signal")
 			quit <- struct{}{}
 		}()
@@ -50,16 +52,9 @@ func main() {
 
 func action(c *cli.Context) (err error) {
 
-	// var cfg context.UpmfConfig
-	// if cfg, err = config.LoadConfig("config/smf.json"); err != nil {
-	// 	logrus.Errorf(err.Error())
-	// 	return
-	// }
-	// if nf, err = service.New(&cfg); err != nil {
-	// 	logrus.Errorf("Fail to create UPMF", err)
-	// 	return
-	// }
-	// service.Start(nf)
+	if err = service.Start(); err != nil {
+		return
+	}
 
 	return nil
 }
