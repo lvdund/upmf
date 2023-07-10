@@ -36,12 +36,15 @@ func GetQuery(nf *context.UPMF) gin.HandlerFunc {
 			path1, _ := json.Marshal(path.Query)
 			path2, _ := json.Marshal(query.Query)
 			if string(path1) == string(path2) {
-				ctx.JSON(http.StatusOK, path)
+				logrus.Infoln("Response Path:", path.Paths.Path)
+				ctx.JSON(http.StatusOK, path.Paths)
 				return
 			}
 		}
+		var path context.DataPath
 		if _, ok := nf.ListLinks[query.Query.Snssai]; ok {
-			quermap.Paths = FindPath(nf.UpfTopo, nf.ListLinks[query.Query.Snssai], &query.Query)
+			path = FindPath(nf.UpfTopo, nf.ListLinks[query.Query.Snssai], &query.Query)
+			quermap.Paths = path
 		} else {
 			ctx.JSON(http.StatusBadRequest, gin.H{"Cause": "loss snssai info"})
 			return
@@ -50,10 +53,8 @@ func GetQuery(nf *context.UPMF) gin.HandlerFunc {
 		quermap.Query = query.Query
 		quermap.UeId = query.UeId
 
-		nf.ListQueryMap[fmt.Sprintf("%s:%s", query.SmfId, query.UeId)] =
-			append(nf.ListQueryMap[fmt.Sprintf("%s:%s", query.SmfId, query.UeId)], quermap)
+		nf.ListQueryMap[fmt.Sprintf("%s:%s", query.SmfId, query.UeId)] = append(nf.ListQueryMap[fmt.Sprintf("%s:%s", query.SmfId, query.UeId)], quermap)
 
-		ctx.JSON(http.StatusOK, quermap)
-		return
+		ctx.JSON(http.StatusOK, path)
 	}
 }

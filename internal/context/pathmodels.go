@@ -31,9 +31,9 @@ func (n *PathNode) String() string {
 // represent a path consisting of Nodes in user plane from access network to data network
 
 type DataPath struct {
-	Path        []*PathNode  //UP nodes in the path
-	Ip          net.IP       //Ue IP allocated by the anchor node
-	Deallocator func(net.IP) //for release Ue IP
+	Path        []*PathNode  `json:"path"`                  //UP nodes in the path
+	Ip          net.IP       `json:"ip"`                    //Ue IP allocated by the anchor node
+	// Deallocator func(net.IP) `json:"deallocator,omitempty"` //for release Ue IP
 }
 
 func (p *DataPath) String() string {
@@ -45,5 +45,5 @@ func (p *DataPath) String() string {
 }
 
 func (p *DataPath) ReleaseIp() {
-	p.Deallocator(p.Ip)
+	// p.Deallocator(p.Ip)
 }

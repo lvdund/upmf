@@ -120,7 +120,7 @@ func FindPath(topo *context.UpfTopo, listlink []context.Link, query *context.Pat
 			datapath = context.DataPath{
 				Path: pathnodes,
 				Ip:   ip,
-				Deallocator: dnnface.Addr.(*context.DnnInfo).Allocator.Release,
+				// Deallocator: dnnface.Addr.(*context.DnnInfo).Allocator.Release,
 			}
 			break
 		}
