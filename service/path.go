@@ -66,11 +66,7 @@ func QueryPath() (path models.DataPath, err error) {
 		logrus.Infoln("Error read response")
 		return
 	}
-	logrus.Infoln("Recive:", path)
-	// if err = json.Unmarshal(responseData, &path); err != nil {
-	// 	logrus.Errorln("Cannot read response message from UPMF:", err)
-	// 	return
-	// }
+	logrus.Infoln("Recive:", path.Ip, "-", path.Path)
 
 	return path, err
 }
