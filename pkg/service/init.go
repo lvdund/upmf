@@ -6,7 +6,6 @@ import (
 	"upmf/internal/context"
 	"upmf/internal/sbi/smf"
 	"upmf/internal/sbi/upf"
-	"upmf/internal/upftopo"
 	"upmf/models"
 
 	"github.com/gin-gonic/gin"
@@ -20,30 +19,27 @@ func init() {
 }
 
 func New(config *context.UpmfConfig) (nf *context.UPMF, err error) {
-	// nf.Config = config
 	nf = &context.UPMF{
 		Config: config,
-		// Nodes:   make(map[string]*upman.UpNode),
-		ListQueryMap: make(map[string][]context.QueryMap),
-		UpfTopo: &context.UpfTopo{
+		TopoMaps: make(map[models.Snssai]*context.UpfTopo),
+	}
+	for _, snssai := range config.Slices {
+		nf.TopoMaps[snssai] = &context.UpfTopo{
 			Nets:       make(map[string]uint8),
 			Nodes:      make(map[string]*context.TopoNode),
 			Sbiid2node: make(map[string]*context.TopoNode),
 			Links:      []context.Link{},
 			Heartbeat:  0,
-		},
-		ListLinks: make(map[models.Snssai][]context.Link),
+		}
 	}
 	return
 }
 
 func Start(nf *context.UPMF) {
-	var config context.TopoConfig
-	upftopo.ParseNets(nf.UpfTopo, &config)
-	handleSbi(nf, &config)
+	handleSbi(nf)
 }
 
-func handleSbi(nf *context.UPMF, config *context.TopoConfig) {
+func handleSbi(nf *context.UPMF) {
 	gin.DisableConsoleColor()
 	// Logging to a file.
 	sbilog, _ := os.Create("config/sbi.log")
@@ -53,9 +49,8 @@ func handleSbi(nf *context.UPMF, config *context.TopoConfig) {
 
 	routerUpf := router.Group("/upf")
 	{
-		routerUpf.PUT("/register", upf.UpfRegister(nf, config))
-		routerUpf.DELETE("/register", upf.UpfDeregister(nf))
-		// routerUpf.PUT("/register", upf.UpfUpdate)
+		routerUpf.PUT("/register", upf.UpfRegister(nf))
+		// routerUpf.DELETE("/register", upf.UpfDeregister(nf))
 	}
 	routerSmf := router.Group("/smf")
 	{

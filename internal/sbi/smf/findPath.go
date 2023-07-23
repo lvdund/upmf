@@ -10,14 +10,15 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func FindPath(topo *context.UpfTopo, listlink []context.Link, query *context.PathQuery) (datapath context.DataPath) {
+func FindPath(topo *context.UpfTopo, query *context.PathQuery) (datapath context.DataPath) {
 
 	//find all anchors and source nodes for searching(at the same time)
 	dnnfaces := []context.NetInf{} //Net interfaces to Dnn
 	srcfaces := []context.NetInf{} //nodes for start searching
 
 	for _, node := range topo.Nodes {
-		if node.IsActive() && node.Serve(query.Snssai) {
+		// if node.IsActive() && node.Serve(query.Snssai) {
+		if node.IsActive() {
 			if infs := topo.GetNodeDnnFaces(node, query.Dnn); len(infs) > 0 {
 				dnnfaces = append(dnnfaces, infs...)
 			}
@@ -61,7 +62,7 @@ func FindPath(topo *context.UpfTopo, listlink []context.Link, query *context.Pat
 
 	ipmap := make(map[string]edgesig) //map edge name to a tuple of its endpoint's ip addresses
 
-	for _, l := range listlink {
+	for _, l := range topo.Links {
 		if l.IsActive(query.Snssai) { //only pick active links
 			edges = append(edges, dijkstra.EdgeInfo{
 				A: l.Inf1.Local.Id,

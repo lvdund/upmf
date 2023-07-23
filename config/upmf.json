@@ -17,5 +17,10 @@
 	"slices":{
 		"slice1": {"sd": "12345","sst": 0},
 		"slice2": {"sd": "54321","sst": 0}
+	},
+	"networks":{ 
+		"access": ["an1", "an2", "an3"],
+		"transport": ["tran"],
+		"dnn": ["e1", "e2", "internet"]
 	}
 }

@@ -9,6 +9,8 @@ import (
 	"upmf/pkg/config"
 	"upmf/pkg/service"
 
+	"github.com/davecgh/go-spew/spew"
+	"github.com/sirupsen/logrus"
 	log "github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 )
@@ -58,16 +60,25 @@ func main() {
 func action(c *cli.Context) (err error) {
 	log.SetLevel(log.InfoLevel)
 
-	var cfg context.UpmfConfig
+	var cfg *context.UpmfConfig
 	if cfg, err = config.LoadConfig("config/upmf.json"); err != nil {
-		log.Errorf(err.Error())
+		log.Errorln("Cannot load Config:",err.Error())
 		return
 	}
-	if nf, err = service.New(&cfg); err != nil {
-		log.Errorf("Fail to create UPMF", err)
+	// Print(cfg)
+	if nf, err = service.New(cfg); err != nil {
+		log.Errorln("Fail to Setup UPMF:", err)
 		return
 	}
 	service.Start(nf)
 
 	return nil
+}
+
+func Print(cfg *context.UpmfConfig) {
+	spew.Config.Indent = "\t"
+	str := spew.Sdump(cfg)
+	logrus.Println("==================================================")
+	logrus.Printf("%s", str)
+	logrus.Println("==================================================")
 }

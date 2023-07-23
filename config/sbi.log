@@ -5,13 +5,12 @@
  - using code:	gin.SetMode(gin.ReleaseMode)
 
 [GIN-debug] PUT    /upf/register             --> upmf/internal/sbi/upf.UpfRegister.func1 (3 handlers)
-[GIN-debug] DELETE /upf/register             --> upmf/internal/sbi/upf.UpfDeregister.func1 (3 handlers)
 [GIN-debug] GET    /smf/query                --> upmf/internal/sbi/smf.GetQuery.func1 (3 handlers)
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on :8081
-[GIN] 2023/07/10 - 23:39:00 | 200 |     178.646µs |             ::1 | PUT      "/upf/register"
-[GIN] 2023/07/10 - 23:39:00 | 200 |      119.57µs |             ::1 | PUT      "/upf/register"
-[GIN] 2023/07/10 - 23:39:00 | 200 |     128.668µs |             ::1 | PUT      "/upf/register"
-[GIN] 2023/07/10 - 23:39:00 | 200 |     103.815µs |             ::1 | PUT      "/upf/register"
-[GIN] 2023/07/10 - 23:39:13 | 200 |     220.323µs |       127.0.0.1 | GET      "/smf/query"
+[GIN] 2023/07/24 - 02:09:31 | 200 |     277.838µs |             ::1 | PUT      "/upf/register"
+[GIN] 2023/07/24 - 02:09:31 | 200 |     108.466µs |             ::1 | PUT      "/upf/register"
+[GIN] 2023/07/24 - 02:09:31 | 200 |     128.613µs |             ::1 | PUT      "/upf/register"
+[GIN] 2023/07/24 - 02:09:31 | 200 |     130.218µs |             ::1 | PUT      "/upf/register"
+[GIN] 2023/07/24 - 02:09:34 | 200 |     214.311µs |       127.0.0.1 | GET      "/smf/query"
