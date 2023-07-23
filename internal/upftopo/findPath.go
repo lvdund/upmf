@@ -1,4 +1,4 @@
-package smf
+package upftopo
 
 import (
 	"fmt"
@@ -92,7 +92,7 @@ func FindPath(topo *context.UpfTopo, query *context.PathQuery) (datapath context
 		logrus.Infof("Search path from %s to %s", srcface.Local.Id, dnnface.Local.Id)
 		if _, paths := graph.ShortestPath(srcface.Local.Id, dnnface.Local.Id); len(paths) > 0 {
 			path := paths[0] //pick the first path
-			for _, pth  := range paths {
+			for _, pth := range paths {
 				if len(pth) < len(path) {
 					path = pth
 				}

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"upmf/internal/context"
+	"upmf/internal/upftopo"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -24,7 +25,7 @@ func GetQuery(nf *context.UPMF) gin.HandlerFunc {
 
 		if _, ok := nf.TopoMaps[query.Snssai]; ok {
 			// if true {
-			queryPath = FindPath(nf.TopoMaps[query.Snssai], &query)
+			queryPath = upftopo.FindPath(nf.TopoMaps[query.Snssai], &query)
 		} else {
 			ctx.JSON(http.StatusBadRequest, gin.H{"Cause": fmt.Sprintf("Cannot access to slice %s", query.Snssai.Sst)})
 			return

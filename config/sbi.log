@@ -9,8 +9,13 @@
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on :8081
-[GIN] 2023/07/24 - 02:09:31 | 200 |     277.838µs |             ::1 | PUT      "/upf/register"
-[GIN] 2023/07/24 - 02:09:31 | 200 |     108.466µs |             ::1 | PUT      "/upf/register"
-[GIN] 2023/07/24 - 02:09:31 | 200 |     128.613µs |             ::1 | PUT      "/upf/register"
-[GIN] 2023/07/24 - 02:09:31 | 200 |     130.218µs |             ::1 | PUT      "/upf/register"
-[GIN] 2023/07/24 - 02:09:34 | 200 |     214.311µs |       127.0.0.1 | GET      "/smf/query"
+[GIN] 2023/07/24 - 02:20:24 | 200 |     213.889µs |             ::1 | PUT      "/upf/register"
+[GIN] 2023/07/24 - 02:20:24 | 200 |     157.699µs |             ::1 | PUT      "/upf/register"
+[GIN] 2023/07/24 - 02:20:24 | 200 |     838.821µs |             ::1 | PUT      "/upf/register"
+[GIN] 2023/07/24 - 02:20:24 | 200 |     569.152µs |             ::1 | PUT      "/upf/register"
+[GIN] 2023/07/24 - 02:20:27 | 200 |     184.412µs |       127.0.0.1 | GET      "/smf/query"
+[GIN] 2023/07/24 - 02:20:30 | 400 |      47.322µs |             ::1 | GET      "/smf/query"
+[GIN] 2023/07/24 - 02:20:41 | 400 |       71.53µs |             ::1 | GET      "/smf/query"
+[GIN] 2023/07/24 - 02:20:44 | 400 |      48.633µs |             ::1 | GET      "/smf/query"
+[GIN] 2023/07/24 - 02:20:45 | 400 |      50.236µs |             ::1 | GET      "/smf/query"
+[GIN] 2023/07/24 - 02:20:52 | 200 |     110.696µs |             ::1 | GET      "/smf/query"
