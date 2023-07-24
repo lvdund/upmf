@@ -22,7 +22,7 @@ func (addr IpAddr) GetIpAddr() net.IP {
 
 // "infs"
 type NetInf struct {
-	Id      string      //unique id in a  topo, compose of the node id, the network, and the interface index
+	Id      string      //unique id in a topo, compose of the node id, the network, and the interface index
 	Netname string      //network that this face connects to
 	Nettype uint8       //type of network
 	Addr    InfAddr     //ipv4 or ipv6

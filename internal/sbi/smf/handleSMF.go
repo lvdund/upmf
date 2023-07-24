@@ -30,11 +30,12 @@ func GetQuery(nf *context.UPMF) gin.HandlerFunc {
 			ctx.JSON(http.StatusBadRequest, gin.H{"Cause": fmt.Sprintf("Cannot access to slice %s", query.Snssai.Sst)})
 			return
 		}
-		logrus.Infoln("Response Path:", queryPath.Path)
 		if queryPath.Path == nil {
+			logrus.Infoln("Cannot Find UPFs Path")
 			ctx.JSON(http.StatusBadRequest, gin.H{"Cause": "Bad Request"})
 			return
 		}
+		logrus.Infoln("Response Path:", queryPath.Path)
 		ctx.JSON(http.StatusOK, queryPath)
 		return
 	}

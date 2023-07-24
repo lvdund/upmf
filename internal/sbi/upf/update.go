@@ -1,30 +1,38 @@
 package upf
 
 import (
-	"context"
 	"net/http"
-	modelcontext "upmf/internal/context"
+	"upmf/internal/context"
+	"upmf/internal/upftopo"
 
 	"github.com/gin-gonic/gin"
-	"go.mongodb.org/mongo-driver/bson"
+	"github.com/sirupsen/logrus"
 )
 
-func UpfUpdate(ctx *gin.Context) {
-	var upfNode modelcontext.NodeConfig
-	if err := ctx.BindJSON(&upfNode); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"Cause": err.Error()})
-		return
-	}
-	filter := bson.M{"id": upfNode.Id}
+func UpfUpdate(nf *context.UPMF) gin.HandlerFunc {
 
-	if count, _ := upfnode_collection.CountDocuments(context.Background(), filter); count > 0 {
+	return func(ctx *gin.Context) {
+		var upfNodeConfig context.NodeConfig
+		if err := ctx.BindJSON(&upfNodeConfig); err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"Cause": err.Error()})
+			return
+		}
+
+		if upfNodeConfig.Msg == "Heart-Beat" {
+			ctx.JSON(http.StatusOK, gin.H{"Status": "Heart-Beat Timer"})
+		}
+
+		for _, slice := range upfNodeConfig.Slices {
+			if snssai, ok := nf.Config.Slices[slice]; ok {
+				upftopo.RemoveNode(&upfNodeConfig, nf.TopoMaps[snssai])
+				nf.TopoMaps[snssai].Links = upftopo.RemoveLink(nf.TopoMaps[snssai].Links, upfNodeConfig.Id)
+			}
+		}
+
+		upftopo.ParseNode(&upfNodeConfig, nf)
+
+		ctx.JSON(http.StatusOK, gin.H{"Status": "UPDATED"})
+		logrus.Infoln(upfNodeConfig.Id, "is Updated")
 		return
 	}
-	if _, err := upfnode_collection.ReplaceOne(context.Background(), filter, upfNode); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"Cause": err.Error()})
-		return
-	}
-	ctx.JSON(http.StatusOK, gin.H{"Status": "UPDATED"})
-	// RegisterNode <- upfNode
-	return
 }

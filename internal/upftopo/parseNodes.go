@@ -9,8 +9,8 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func ParseNode(upfNodeConfig *context.NodeConfig, nf *context.UPMF) (node *context.TopoNode) {
-	node = context.NewNode(upfNodeConfig.Id, upfNodeConfig.Sbi.Heartbeat, upfNodeConfig.Sbi, true)
+func ParseNode(upfNodeConfig *context.NodeConfig, nf *context.UPMF) {
+	node := context.NewNode(upfNodeConfig.Id, upfNodeConfig.Sbi.Heartbeat, upfNodeConfig.Sbi, true)
 	for _, slice := range upfNodeConfig.Slices {
 		if snssai, ok := nf.Config.Slices[slice]; ok {
 			node.Slices = append(node.Slices, snssai)
@@ -65,11 +65,19 @@ func ParseNode(upfNodeConfig *context.NodeConfig, nf *context.UPMF) (node *conte
 			logrus.Infoln("No sbi to", node.Id)
 		}
 	}
-	for _, snssai := range node.Slices {
-		logrus.Infoln(snssai, nf.TopoMaps[snssai].Nets)
-	}
 
 	return
+}
+
+func RemoveNode(upfNodeConfig *context.NodeConfig, topo *context.UpfTopo) {
+	delete(topo.Nodes, upfNodeConfig.Id)
+
+	for sbi, node := range topo.Sbiid2node {
+		if node.Id == upfNodeConfig.Id {
+			delete(topo.Sbiid2node, sbi)
+			logrus.Infoln("Deleted node", upfNodeConfig.Id)
+		}
+	}
 }
 
 func ParseIpAddrList(infs []context.NetInfConfig) (addrlist []context.IpAddr) {

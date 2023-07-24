@@ -38,6 +38,7 @@ type NodeConfig struct {
 	Slices []string                  `json:"slices"`
 	Infs   map[string][]NetInfConfig `json:"infs"`
 	Sbi    *SbiConfig                `json:"sbi,omitempty"`
+	Msg    string                    `json:"msg,omitempty"`
 }
 type NetInfConfig struct {
 	Addr    string         `json:"addr"`

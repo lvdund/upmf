@@ -49,7 +49,6 @@ func FindPath(topo *context.UpfTopo, query *context.PathQuery) (datapath context
 		logrus.Errorf("can't select an anchor to allocate Ue's IP")
 		return
 	}
-	logrus.Infof("UE's IP = %s(%d) on Dnn=%s", ip.String(), len(ip), dnnface.Netname)
 
 	//build a graph of active links then find the shortest paths from source to destination
 	edges := []dijkstra.EdgeInfo{} //edges to build the grap
@@ -69,7 +68,7 @@ func FindPath(topo *context.UpfTopo, query *context.PathQuery) (datapath context
 				B: l.Inf2.Local.Id,
 				W: int64(l.W),
 			})
-			logrus.Infof("add link %s-%s", l.Inf1.Local.Id, l.Inf2.Local.Id)
+			// logrus.Infof("add link %s-%s", l.Inf1.Local.Id, l.Inf2.Local.Id)
 			//keep the ip addresses of the edges for later use
 			ipmap[fmt.Sprintf("%s-%s", l.Inf1.Local.Id, l.Inf2.Local.Id)] = edgesig{
 				ip1: l.Inf1.Addr.GetIpAddr(),
@@ -126,5 +125,6 @@ func FindPath(topo *context.UpfTopo, query *context.PathQuery) (datapath context
 			break
 		}
 	}
+	logrus.Infof("Setup UE's IP = %s(%d) on Dnn=%s", ip.String(), len(ip), dnnface.Netname)
 	return
 }

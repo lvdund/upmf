@@ -20,7 +20,7 @@ func init() {
 
 func New(config *context.UpmfConfig) (nf *context.UPMF, err error) {
 	nf = &context.UPMF{
-		Config: config,
+		Config:   config,
 		TopoMaps: make(map[models.Snssai]*context.UpfTopo),
 	}
 	for _, snssai := range config.Slices {
@@ -29,7 +29,7 @@ func New(config *context.UpmfConfig) (nf *context.UPMF, err error) {
 			Nodes:      make(map[string]*context.TopoNode),
 			Sbiid2node: make(map[string]*context.TopoNode),
 			Links:      []context.Link{},
-			Heartbeat:  0,
+			Heartbeat:  3,
 		}
 	}
 	return
@@ -50,7 +50,8 @@ func handleSbi(nf *context.UPMF) {
 	routerUpf := router.Group("/upf")
 	{
 		routerUpf.PUT("/register", upf.UpfRegister(nf))
-		// routerUpf.DELETE("/register", upf.UpfDeregister(nf))
+		routerUpf.PATCH("/register", upf.UpfUpdate(nf))
+		routerUpf.DELETE("/register", upf.UpfDeregister(nf))
 	}
 	routerSmf := router.Group("/smf")
 	{
