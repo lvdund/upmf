@@ -10,6 +10,12 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+var log *logrus.Entry
+
+func init() {
+	log = logrus.WithFields(logrus.Fields{"upmf": "smf"})
+}
+
 func GetQuery(nf *context.UPMF) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		// var query context.Query
@@ -19,7 +25,7 @@ func GetQuery(nf *context.UPMF) gin.HandlerFunc {
 			return
 		}
 
-		logrus.Infoln("Query msg:", query)
+		log.Infoln("Query msg:", query)
 
 		var queryPath context.DataPath
 
@@ -31,11 +37,11 @@ func GetQuery(nf *context.UPMF) gin.HandlerFunc {
 			return
 		}
 		if queryPath.Path == nil {
-			logrus.Infoln("Cannot Find UPFs Path")
+			log.Infoln("Cannot Find UPFs Path")
 			ctx.JSON(http.StatusBadRequest, gin.H{"Cause": "Bad Request"})
 			return
 		}
-		logrus.Infoln("Response Path:", queryPath.Path)
+		log.Infoln("Response Path:", queryPath.Path)
 		ctx.JSON(http.StatusOK, queryPath)
 		return
 	}

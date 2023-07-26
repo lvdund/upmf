@@ -11,9 +11,14 @@ import (
 
 	"github.com/davecgh/go-spew/spew"
 	"github.com/sirupsen/logrus"
-	log "github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 )
+
+var log *logrus.Entry
+
+func init() {
+	log = logrus.WithFields(logrus.Fields{"mod": "upmf"})
+}
 
 var flags = []cli.Flag{
 	cli.StringFlag{
@@ -37,32 +42,22 @@ func main() {
 	app.Action = action
 	app.Flags = flags
 
-	if err := app.Run(os.Args); err != nil {
-		//log
-		log.Fatal("Fail to start application", err)
-	} else {
-		quit := make(chan struct{})
-		sigch := make(chan os.Signal, 1)
-		signal.Notify(sigch, os.Interrupt, syscall.SIGTERM)
-		go func() {
-			<-sigch
-			if nf != nil {
-				service.Stop(nf)
-			}
-			log.Info("Received a kill signal")
-			quit <- struct{}{}
-		}()
-		<-quit
-		log.Info("Good bye the world")
-	}
+	sigch := make(chan os.Signal, 1)
+	signal.Notify(sigch, os.Interrupt, syscall.SIGTERM)
+	go func() {
+		<-sigch
+		log.Printf("Shutdown UPMF")
+		service.Stop(nf)
+	}()
+
+	app.Run(os.Args)
 }
 
 func action(c *cli.Context) (err error) {
-	log.SetLevel(log.InfoLevel)
 
 	var cfg *context.UpmfConfig
 	if cfg, err = config.LoadConfig("config/upmf.json"); err != nil {
-		log.Errorln("Cannot load Config:",err.Error())
+		log.Errorln("Cannot load Config:", err.Error())
 		return
 	}
 	// Print(cfg)
@@ -78,7 +73,7 @@ func action(c *cli.Context) (err error) {
 func Print(cfg *context.UpmfConfig) {
 	spew.Config.Indent = "\t"
 	str := spew.Sdump(cfg)
-	logrus.Println("==================================================")
-	logrus.Printf("%s", str)
-	logrus.Println("==================================================")
+	log.Println("==================================================")
+	log.Printf("%s", str)
+	log.Println("==================================================")
 }

@@ -6,7 +6,6 @@ import (
 	"upmf/internal/upftopo"
 
 	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
 )
 
 func UpfUpdate(nf *context.UPMF) gin.HandlerFunc {
@@ -22,17 +21,23 @@ func UpfUpdate(nf *context.UPMF) gin.HandlerFunc {
 			ctx.JSON(http.StatusOK, gin.H{"Status": "Heart-Beat Timer"})
 		}
 
+		upfId := ctx.Param("nameID")
+
 		for _, slice := range upfNodeConfig.Slices {
 			if snssai, ok := nf.Config.Slices[slice]; ok {
-				upftopo.RemoveNode(&upfNodeConfig, nf.TopoMaps[snssai])
-				nf.TopoMaps[snssai].Links = upftopo.RemoveLink(nf.TopoMaps[snssai].Links, upfNodeConfig.Id)
+				upftopo.RemoveNode(upfId, nf.TopoMaps[snssai])
+				for i, link := range nf.TopoMaps[snssai].Links {
+					if link.Inf1.Local.Id == upfId || link.Inf2.Local.Id == upfId {
+						nf.TopoMaps[snssai].Links = append(nf.TopoMaps[snssai].Links[:i], nf.TopoMaps[snssai].Links[i+1:]...)
+					}
+				}
 			}
 		}
 
 		upftopo.ParseNode(&upfNodeConfig, nf)
 
 		ctx.JSON(http.StatusOK, gin.H{"Status": "UPDATED"})
-		logrus.Infoln(upfNodeConfig.Id, "is Updated")
+		log.Infoln(upfNodeConfig.Id, "is Updated")
 		return
 	}
 }

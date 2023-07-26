@@ -6,7 +6,6 @@ import (
 	"upmf/internal/upftopo"
 
 	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
 )
 
 func UpfRegister(nf *context.UPMF) gin.HandlerFunc {
@@ -18,7 +17,7 @@ func UpfRegister(nf *context.UPMF) gin.HandlerFunc {
 			return
 		}
 		ctx.JSON(http.StatusOK, gin.H{"Status": "REGISTERED"})
-		logrus.Infoln(upfNodeConfig.Id, "is Registerd")
+		log.Infoln(upfNodeConfig.Id, "is Registerd")
 
 		upftopo.ParseNode(&upfNodeConfig, nf)
 	}

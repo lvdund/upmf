@@ -4,8 +4,6 @@ import (
 	"net"
 	"upmf/internal/context"
 	"upmf/models"
-
-	"github.com/sirupsen/logrus"
 )
 
 func GenLink(nodeA *context.TopoNode, netInf *context.NetInf, topo *context.UpfTopo, snssai models.Snssai) {
@@ -32,21 +30,22 @@ func GenLink(nodeA *context.TopoNode, netInf *context.NetInf, topo *context.UpfT
 						Inf2: &inf,
 						W:    1,
 					})
-					logrus.Infoln("GenLink:", netInf.Id, "-----", inf.Id, "in slice:", snssai)
+					log.Infoln("Create link:", netInf.Id, "--", inf.Id, "in slice:", snssai)
 				}
 			}
 		}
 	}
 }
 
-func RemoveLink(Links []context.Link, id string) []context.Link {
-	for i, link := range Links {
+func RemoveLink(Links []context.Link, id string, snssai models.Snssai) (resultLinks []context.Link) {
+	for _, link := range Links {
 		if link.Inf1.Local.Id == id || link.Inf2.Local.Id == id {
-			logrus.Infoln("Deleted:", link.Inf1.Id, "-", link.Inf2.Id)
-			Links = append(Links[:i], Links[i+1:]...)
+			log.Infoln("Deleted:", link.Inf1.Id, "-", link.Inf2.Id, "in slice:", snssai)
+		} else {
+			resultLinks = append(resultLinks, link)
 		}
 	}
-	return Links
+	return
 }
 
 func checkSameGateWay(ip1 net.IP, ip2 net.IP) bool {

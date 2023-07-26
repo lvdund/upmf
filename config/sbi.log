@@ -4,15 +4,15 @@
  - using env:	export GIN_MODE=release
  - using code:	gin.SetMode(gin.ReleaseMode)
 
-[GIN-debug] PUT    /upf/register             --> upmf/internal/sbi/upf.UpfRegister.func1 (3 handlers)
-[GIN-debug] PATCH  /upf/register             --> upmf/internal/sbi/upf.UpfUpdate.func1 (3 handlers)
-[GIN-debug] DELETE /upf/register             --> upmf/internal/sbi/upf.UpfDeregister.func1 (3 handlers)
-[GIN-debug] GET    /smf/query                --> upmf/internal/sbi/smf.GetQuery.func1 (3 handlers)
+[GIN-debug] PUT    /upfmanagement/:nameID    --> upmf/internal/sbi/upf.UpfRegister.func1 (3 handlers)
+[GIN-debug] PATCH  /upfmanagement/:nameID    --> upmf/internal/sbi/upf.UpfUpdate.func1 (3 handlers)
+[GIN-debug] DELETE /upfmanagement/:nameID    --> upmf/internal/sbi/upf.UpfDeregister.func1 (3 handlers)
+[GIN-debug] GET    /smfcomputepath           --> upmf/internal/sbi/smf.GetQuery.func1 (3 handlers)
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
-[GIN-debug] Listening and serving HTTP on :8081
-[GIN] 2023/07/24 - 13:29:39 | 200 |     209.753µs |             ::1 | PUT      "/upf/register"
-[GIN] 2023/07/24 - 13:29:39 | 200 |     145.017µs |             ::1 | PUT      "/upf/register"
-[GIN] 2023/07/24 - 13:29:39 | 200 |     100.367µs |             ::1 | PUT      "/upf/register"
-[GIN] 2023/07/24 - 13:29:39 | 200 |      92.865µs |             ::1 | PUT      "/upf/register"
-[GIN] 2023/07/24 - 13:30:51 | 200 |     102.859µs |             ::1 | PATCH    "/upf/register"
+[GIN-debug] Listening and serving HTTP on 127.0.0.1:9700
+[GIN] 2023/07/25 - 12:21:29 | 200 |     224.701µs |       127.0.0.1 | PUT      "/upfmanagement/upf2"
+[GIN] 2023/07/25 - 12:21:29 | 200 |     143.853µs |       127.0.0.1 | PUT      "/upfmanagement/upf3"
+[GIN] 2023/07/25 - 12:21:29 | 200 |     109.866µs |       127.0.0.1 | PUT      "/upfmanagement/upf1"
+[GIN] 2023/07/25 - 12:21:29 | 200 |     114.958µs |       127.0.0.1 | PUT      "/upfmanagement/upf4"
+[GIN] 2023/07/25 - 12:21:38 | 200 |     161.491µs |       127.0.0.1 | GET      "/smfcomputepath"

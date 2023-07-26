@@ -7,28 +7,20 @@ import (
 	"upmf/internal/upftopo"
 
 	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
 )
 
 func UpfDeregister(nf *modelcontext.UPMF) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		var upfNodeConfig modelcontext.NodeConfig
-		if err := ctx.BindJSON(&upfNodeConfig); err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
+		upfId := ctx.Param("nameID")
 
 		for _, snssai := range nf.Config.Slices {
-			upftopo.RemoveNode(&upfNodeConfig, nf.TopoMaps[snssai])
-			nf.TopoMaps[snssai].Links = upftopo.RemoveLink(nf.TopoMaps[snssai].Links, upfNodeConfig.Id)
+			upftopo.RemoveNode(upfId, nf.TopoMaps[snssai])
+			nf.TopoMaps[snssai].Links = upftopo.RemoveLink(nf.TopoMaps[snssai].Links, upfId, snssai)
 		}
+		log.Infoln("Deleted UPF", upfId)
 
 		ctx.JSON(http.StatusOK, gin.H{"Status": "DEREGISTERED"})
-		logrus.Infoln(upfNodeConfig.Id, "is Deregisterd")
-
-		// for _, topo := range nf.TopoMaps {
-		// 	PrintLink(topo.Links)
-		// }
+		log.Infoln(upfId, "is Deregisterd")
 
 		return
 	}
@@ -36,6 +28,6 @@ func UpfDeregister(nf *modelcontext.UPMF) gin.HandlerFunc {
 
 func PrintLink(Links []context.Link) {
 	for _, link := range Links {
-		logrus.Infoln(link.Inf1.Id, "-", link.Inf2.Id)
+		log.Infoln(link.Inf1.Id, "-", link.Inf2.Id)
 	}
 }

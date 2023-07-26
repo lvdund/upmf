@@ -9,6 +9,12 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+var log *logrus.Entry
+
+func init() {
+	log = logrus.WithFields(logrus.Fields{"upmf": "topo"})
+}
+
 func ParseNode(upfNodeConfig *context.NodeConfig, nf *context.UPMF) {
 	node := context.NewNode(upfNodeConfig.Id, upfNodeConfig.Sbi.Heartbeat, upfNodeConfig.Sbi, true)
 	for _, slice := range upfNodeConfig.Slices {
@@ -59,23 +65,23 @@ func ParseNode(upfNodeConfig *context.NodeConfig, nf *context.UPMF) {
 	}
 	for _, snssai := range node.Slices {
 		nf.TopoMaps[snssai].Nodes[node.Id] = node
+		log.Infoln("Add UPF", node.Id, "in slice:", snssai)
 		if node.HasSbiIp() {
 			nf.TopoMaps[snssai].Sbiid2node[node.Sbiinfo.NodeId()] = node
 		} else {
-			logrus.Infoln("No sbi to", node.Id)
+			log.Infoln("No sbi to", node.Id)
 		}
 	}
 
 	return
 }
 
-func RemoveNode(upfNodeConfig *context.NodeConfig, topo *context.UpfTopo) {
-	delete(topo.Nodes, upfNodeConfig.Id)
+func RemoveNode(upfId string, topo *context.UpfTopo) {
+	delete(topo.Nodes, upfId)
 
 	for sbi, node := range topo.Sbiid2node {
-		if node.Id == upfNodeConfig.Id {
+		if node.Id == upfId {
 			delete(topo.Sbiid2node, sbi)
-			logrus.Infoln("Deleted node", upfNodeConfig.Id)
 		}
 	}
 }
@@ -85,7 +91,7 @@ func ParseIpAddrList(infs []context.NetInfConfig) (addrlist []context.IpAddr) {
 		if ip := net.ParseIP(info.Addr); ip != nil {
 			addrlist = append(addrlist, context.IpAddr(ip))
 		} else {
-			logrus.Warnf("parse IP fails '%s'", info.Addr)
+			log.Warnf("parse IP fails '%s'", info.Addr)
 		}
 	}
 	return
@@ -103,13 +109,13 @@ func ParseDnnInfoList(infs []context.NetInfConfig) (addrlist []*context.DnnInfo)
 					// log.Infoln("info.Addr:", info.Addr)
 					// log.Infoln("addrlist:", info.DnnInfo.Cidr, "to ->", ip, "-", ipnet.IP, net.IP(ipnet.Mask))
 				} else if err != nil {
-					logrus.Warnf("Parse CIDR %s returns error: %s", info.DnnInfo.Cidr, err.Error())
+					log.Warnf("Parse CIDR %s returns error: %s", info.DnnInfo.Cidr, err.Error())
 				}
 			} else {
-				logrus.Warnf("parse IP fails '%s'", info.Addr)
+				log.Warnf("parse IP fails '%s'", info.Addr)
 			}
 		} else {
-			logrus.Warnf("Dnn at %s has empty cidr", info.Addr)
+			log.Warnf("Dnn at %s has empty cidr", info.Addr)
 		}
 	}
 	// for _, value := range addrlist {

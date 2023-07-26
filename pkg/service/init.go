@@ -1,7 +1,7 @@
 package service
 
 import (
-	"io"
+	"fmt"
 	"os"
 	"upmf/internal/context"
 	"upmf/internal/sbi/smf"
@@ -40,24 +40,25 @@ func Start(nf *context.UPMF) {
 }
 
 func handleSbi(nf *context.UPMF) {
+
+	gin.SetMode(gin.ReleaseMode)
 	gin.DisableConsoleColor()
 	// Logging to a file.
-	sbilog, _ := os.Create("config/sbi.log")
-	gin.DefaultWriter = io.MultiWriter(sbilog)
+	// sbilog, _ := os.Create("config/sbi.log")
+	// gin.DefaultWriter = io.MultiWriter(sbilog)
 
 	router := gin.Default()
 
-	routerUpf := router.Group("/upf")
+	routerUpf := router.Group("/upfmanagement")
 	{
-		routerUpf.PUT("/register", upf.UpfRegister(nf))
-		routerUpf.PATCH("/register", upf.UpfUpdate(nf))
-		routerUpf.DELETE("/register", upf.UpfDeregister(nf))
+		routerUpf.PUT("/:nameID", upf.UpfRegister(nf))
+		routerUpf.PATCH("/:nameID", upf.UpfUpdate(nf))
+		routerUpf.DELETE("/:nameID", upf.UpfDeregister(nf))
 	}
-	routerSmf := router.Group("/smf")
-	{
-		routerSmf.GET("/query", smf.GetQuery(nf))
-	}
-	router.Run(":8081")
+	router.GET("/smfcomputepath", smf.GetQuery(nf))
+
+	upmfSbi := fmt.Sprintf("%s:%d", nf.Config.Sbi.Ip.String(), nf.Config.Sbi.Port)
+	router.Run(upmfSbi)
 	// router.RunTLS(":8081", "./config/TLS/server.pem", "./config/TLS/server.key")
 }
 
