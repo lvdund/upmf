@@ -15,6 +15,7 @@ import (
 
 // func QueryPath(query models.PathQuery, sbiupmf models.Sbi) (path models.DataPath, err error) {
 func QueryPath() (path models.DataPath, err error) {
+
 	// test
 	pathquery := models.PathQuery{
 		Dnn: "internet",
@@ -47,7 +48,7 @@ func QueryPath() (path models.DataPath, err error) {
 		return
 	}
 	req.Header.Set("Content-Type", "application/json")
-
+	
 	// sending request
 	client := &http.Client{}
 	resp, err := client.Do(req)
